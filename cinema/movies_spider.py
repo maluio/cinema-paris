@@ -65,14 +65,22 @@ if __name__ == '__main__':
         },
     })
 
-    process.crawl(MoviesSpider)
-    process.start()
+    #process.crawl(MoviesSpider)
+    #process.start()
 
     with open('movies.json', 'r') as f:
         movies = json.load(f)
+
+    cinemas = dict()
+
+    for m in movies:
+        for c in m['cinemas']:
+            name = c['name']
+            cinemas[name] = cinemas.get(name, {"name": name , "movies": []})
+            cinemas[name]['movies'].append({'movie': {'title': m['movie']['title'], 'show_times': c['show_times']}})
 
     with open('cinema.jinja2', 'r') as t:
         template = Template(t.read())
 
     with open('cinema.html', 'w') as t:
-        t.write(template.render(movies=movies))
+        t.write(template.render(movies=movies, cinemas=cinemas.values()))

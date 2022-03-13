@@ -5,9 +5,36 @@
 <body>
 <h1>Cinemas</h1>
 <ul>
+    {% for cinema in cinemas %}
+        <li><a href="#{{ cinema.name }}">{{ cinema.name }}</a></li>
+    {% endfor %}
+</ul>
+<h1>Movies</h1>
+<ul>
+    {% for movie in movies %}
+        <li><a href="#{{ movie.movie.title }}">{{ movie.movie.title }}</a></li>
+    {% endfor %}
+</ul>
+<ul>
+    {% for cinema in cinemas %}
+        <li>{{ cinema.name }}</li>
+        <ul id="{{ cinema.name }}">
+            {% for movie in cinema.movies %}
+                <li>{{ movie.movie.title }}</li>
+                <ul>
+                    {% for st in movie.movie.show_times %}
+                        <li>{{ st }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</ul>
+<h1>Movies</h1>
+<ul>
     {% for movie in movies %}
         <li>{{ movie.movie.title }}</li>
-        <ul>
+        <ul id="{{ movie.movie.title }}">
             {% for cinema in movie.cinemas %}
                 <li>{{ cinema.name }}</li>
                 <ul>
