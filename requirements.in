@@ -1,0 +1,6 @@
+# https://pypi.org/project/pip-tools/
+# $ pip-compile --generate-hashes --allow-unsafe requirements.in
+# $ pip-sync
+
+pytest
+scrapy
