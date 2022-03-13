@@ -19,11 +19,14 @@ def test_movies(load_movies_1):
         if type(item) == dict:
             items.append(item)
 
-    assert len(items) == 4
+    assert len(items) == 2
 
     assert items[0]['movie']['title'] == 'Alouettes, le fil à la patte'
-    assert items[0]['cinema']['name'] == 'Reflet Médicis'
-    assert items[0]['show_time'] == '2022-03-11T19:30:00'
+    assert len(items[0]['cinemas']) == 1
+    assert items[0]['cinemas'][0]['name'] == 'Reflet Médicis'
+    assert items[0]['cinemas'][0]['url'] == '/salle/reflet-medicis'
+    assert len(items[0]['cinemas'][0]['show_times']) == 1
+    assert items[0]['cinemas'][0]['show_times'][0] == '2022-03-11T19:30:00'
 
 
 @pytest.mark.parametrize("day, time ,expected",
