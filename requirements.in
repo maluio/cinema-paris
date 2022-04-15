@@ -5,3 +5,4 @@
 pytest
 scrapy
 Jinja2
+boto3

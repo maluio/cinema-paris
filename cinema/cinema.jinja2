@@ -1,26 +1,27 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <title>Malu CIP</title>
 </head>
 <body>
 <h1>Cinemas</h1>
 <ul>
     {% for cinema in cinemas %}
-        <li><a href="#{{ cinema.name }}">{{ cinema.name }}</a></li>
+        <li><a href="#{{ cinema.name }}">{{ cinema.name }}</a><a href="{{ cinema.url }}" target="_blank">-></a></li>
     {% endfor %}
 </ul>
 <h1>Movies</h1>
 <ul>
     {% for movie in movies %}
-        <li><a href="#{{ movie.movie.title }}">{{ movie.movie.title }}</a></li>
+        <li><a href="#{{ movie.movie.title }}">{{ movie.movie.title }}</a><a href="{{ movie.movie.url }}" target="_blank">-></a></li>
     {% endfor %}
 </ul>
 <ul>
     {% for cinema in cinemas %}
-        <li>{{ cinema.name }}</li>
+        <li><a href="{{ cinema.url }}" target="_blank">{{ cinema.name }}</a></li>
         <ul id="{{ cinema.name }}">
             {% for movie in cinema.movies %}
-                <li>{{ movie.movie.title }}</li>
+                <li><a href="{{ movie.movie.url }}" target="_blank">{{ movie.movie.title }}</a></li>
                 <ul>
                     {% for st in movie.movie.show_times %}
                         <li>{{ st }}</li>
@@ -33,10 +34,10 @@
 <h1>Movies</h1>
 <ul>
     {% for movie in movies %}
-        <li>{{ movie.movie.title }}</li>
+        <li><a href="{{ movie.movie.url }}" target="_blank">{{ movie.movie.title }}</a></li>
         <ul id="{{ movie.movie.title }}">
             {% for cinema in movie.cinemas %}
-                <li>{{ cinema.name }}</li>
+                <li><a href="{{ cinema.url }}" target="_blank">{{ cinema.name }}</a></li>
                 <ul>
                     {% for st in cinema.show_times %}
                         <li>{{ st }}</li>

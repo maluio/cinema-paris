@@ -22,9 +22,10 @@ def test_movies(load_movies_1):
     assert len(items) == 2
 
     assert items[0]['movie']['title'] == 'Alouettes, le fil à la patte'
+    assert items[0]['movie']['url'] == 'http://cip-paris.fr/film/alouettes-le-fil-a-la-patte'
     assert len(items[0]['cinemas']) == 1
     assert items[0]['cinemas'][0]['name'] == 'Reflet Médicis'
-    assert items[0]['cinemas'][0]['url'] == '/salle/reflet-medicis'
+    assert items[0]['cinemas'][0]['url'] == 'http://cip-paris.fr/salle/reflet-medicis'
     assert len(items[0]['cinemas'][0]['show_times']) == 1
     assert items[0]['cinemas'][0]['show_times'][0] == '2022-03-11T19:30:00'
 

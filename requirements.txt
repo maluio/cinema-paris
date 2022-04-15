@@ -16,6 +16,16 @@ automat==20.2.0 \
     --hash=sha256:7979803c74610e11ef0c0d68a2942b152df52da55336e0c9d58daf1831cbdf33 \
     --hash=sha256:b6feb6455337df834f6c9962d6ccf771515b7d939bca142b29c20c2376bc6111
     # via twisted
+boto3==1.21.41 \
+    --hash=sha256:3b5a3c701bb9b48e145723c1a72d2752fa3613f6e5aaf0660ef605bf13f82bb4 \
+    --hash=sha256:986aa67e577b44b65a6cc42bfd74593e6d95e2dbc0b0c37e358f2253b00542db
+    # via -r requirements.in
+botocore==1.24.41 \
+    --hash=sha256:57ed9843e5b6a74f82530b31dc622c8042b1c62a5ca9d46e92d2b4366450039b \
+    --hash=sha256:65be3e46bb10056c7e6407303928c649e7ea8a01e0e3f449d5cbb6b73f8146e0
+    # via
+    #   boto3
+    #   s3transfer
 certifi==2021.10.8 \
     --hash=sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872 \
     --hash=sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569
@@ -151,7 +161,10 @@ jinja2==3.0.3 \
 jmespath==0.10.0 \
     --hash=sha256:b85d0567b8666149a93172712e68920734333c0ce7e89b78b3e987f71e5ed4f9 \
     --hash=sha256:cdf6525904cc597730141d61b36f2e4b8ecc257c420fa2f4549bac2c2d0cb72f
-    # via itemloaders
+    # via
+    #   boto3
+    #   botocore
+    #   itemloaders
 lxml==4.8.0 \
     --hash=sha256:078306d19a33920004addeb5f4630781aaeabb6a8d01398045fcde085091a169 \
     --hash=sha256:0c1978ff1fd81ed9dcbba4f91cf09faf1f8082c9d72eb122e92294716c605428 \
@@ -311,6 +324,10 @@ pytest==7.0.1 \
     --hash=sha256:9ce3ff477af913ecf6321fe337b93a2c0dcf2a0a1439c43f5452112c1e4280db \
     --hash=sha256:e30905a0c131d3d94b89624a1cc5afec3e0ba2fbdb151867d8e0ebd49850f171
     # via -r requirements.in
+python-dateutil==2.8.2 \
+    --hash=sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86 \
+    --hash=sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9
+    # via botocore
 queuelib==1.6.2 \
     --hash=sha256:4b207267f2642a8699a1f806045c56eb7ad1a85a10c0e249884580d139c2fcd2 \
     --hash=sha256:4b96d48f650a814c6fb2fd11b968f9c46178b683aad96d68f930fe13a8574d19
@@ -325,6 +342,10 @@ requests-file==1.5.1 \
     --hash=sha256:07d74208d3389d01c38ab89ef403af0cfec63957d53a0081d8eca738d0247d8e \
     --hash=sha256:dfe5dae75c12481f68ba353183c53a65e6044c923e64c24b2209f6c7570ca953
     # via tldextract
+s3transfer==0.5.2 \
+    --hash=sha256:7a6f4c4d1fdb9a2b640244008e142cbc2cd3ae34b386584ef044dd0f27101971 \
+    --hash=sha256:95c58c194ce657a5f4fb0b9e60a84968c808888aed628cd98ab8771fe1db98ed
+    # via boto3
 scrapy==2.6.1 \
     --hash=sha256:56fd55a59d0f329ce752892358abee5a6b50b4fc55a40420ea317dc617553827 \
     --hash=sha256:e977f57d4e828f25d2702e8c2212e8abcd7d6ce45be560f1830a39432a494c09
@@ -340,6 +361,7 @@ six==1.16.0 \
     #   automat
     #   parsel
     #   protego
+    #   python-dateutil
     #   requests-file
     #   service-identity
     #   w3lib
@@ -362,7 +384,9 @@ typing-extensions==4.1.1 \
 urllib3==1.26.8 \
     --hash=sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed \
     --hash=sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c
-    # via requests
+    # via
+    #   botocore
+    #   requests
 w3lib==1.22.0 \
     --hash=sha256:0161d55537063e00d95a241663ede3395c4c6d7b777972ba2fd58bbab2001e53 \
     --hash=sha256:0ad6d0203157d61149fd45aaed2e24f53902989c32fc1dccc2e2bfba371560df
