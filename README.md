@@ -1,0 +1,1 @@
+[![Cinemas Paris Scraper](https://github.com/maluio/cinema-paris/actions/workflows/scrape.yml/badge.svg)](https://github.com/maluio/cinema-paris/actions/workflows/scrape.yml)

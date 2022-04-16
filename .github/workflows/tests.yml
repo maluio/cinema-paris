@@ -1,4 +1,4 @@
-name: Cinemas Paris Scraper Tests
+name: Tests
 
 on:
   push:

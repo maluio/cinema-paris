@@ -102,6 +102,13 @@ def upload_file_to_s3(file_name, bucket, object_name=None):
 
 if __name__ == '__main__':
 
+    if not os.environ.get('AWS_BUCKET'):
+        raise Exception('AWS_BUCKET not set')
+    if not os.environ.get('AWS_ACCESS_KEY_ID'):
+        raise Exception('AWS_ACCESS_KEY_ID not set')
+    if not os.environ.get('AWS_SECRET_ACCESS_KEY'):
+        raise Exception('AWS_SECRET_ACCESS_KEY not set')
+
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         logging.info('created temporary directory', tmp_dir_name)
 
@@ -111,7 +118,7 @@ if __name__ == '__main__':
             "FEEDS": {
                 f'{tmp_dir_name}/movies.json': {"format": "json"},
             },
-            "LOG_LEVEL": "WARNING"
+            "LOG_LEVEL": "INFO"
         })
 
         process.crawl(MoviesSpider)
@@ -138,5 +145,4 @@ if __name__ == '__main__':
         with open(html_file_name, 'w') as t:
             t.write(template.render(movies=movies, cinemas=cinemas.values()))
 
-        if os.environ.get('AWS_BUCKET'):
-            upload_file_to_s3(html_file_name, os.environ.get('AWS_BUCKET'))
+        upload_file_to_s3(html_file_name, os.environ.get('AWS_BUCKET'))
