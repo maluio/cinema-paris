@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from cinema.movies_spider import MoviesSpider
+from main import MoviesSpider
 from scrapy.http import TextResponse, Request
 
 
