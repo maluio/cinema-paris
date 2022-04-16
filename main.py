@@ -131,7 +131,7 @@ if __name__ == '__main__':
                     {'movie': {'title': m['movie']['title'], 'url': m['movie']['url'],
                                'show_times': format_show_times(c['show_times'])}})
 
-        with open('cinema.jinja2', 'r') as t:
+        with open('index.jinja2', 'r') as t:
             template = Template(t.read())
 
         html_file_name = f'{tmp_dir_name}/index.html'
