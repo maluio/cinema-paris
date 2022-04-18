@@ -2,7 +2,11 @@
 # $ pip-compile --generate-hashes --allow-unsafe requirements.in
 # $ pip-sync
 
+pip-tools
 pytest
+coverage
 scrapy
 Jinja2
 boto3
+beautifulsoup4
+pydantic

@@ -3,43 +3,50 @@ import datetime
 import pytest
 import os
 
-from main import MoviesSpider
+from main import MoviesSpider, render_html_file, Movie
 from scrapy.http import TextResponse, Request
 
+from bs4 import BeautifulSoup
 
-def load_html(name):
-    with open(f"{os.path.dirname(__file__)}/fixtures/{name}", "r") as f:
+FIXTURES_PATH = f"{os.path.dirname(__file__)}/fixtures"
+
+
+def load_file(name):
+    with open(f"{FIXTURES_PATH}/{name}", "r") as f:
         content = f.read()
     return content
 
 
 @pytest.fixture
-def load_movies_1():
-    return load_html("movies_1.html")
+def load_movies_1_html():
+    return load_file("movies_1.html")
 
 
-def test_movies(load_movies_1):
+def test_movies(load_movies_1_html):
     url = "https://www.example.com"
     request = Request(url=url)
     response = TextResponse(url=url,
                             request=request,
-                            body=load_movies_1.encode('utf-8'))
+                            body=load_movies_1_html.encode('utf-8'))
 
     spider = MoviesSpider()
-    items = []
+    movies = []
     for item in spider.parse(response):
         if type(item) == dict:
-            items.append(item)
+            movies.append(Movie.parse_obj(item['movie']))
 
-    assert len(items) == 2
+    assert len(movies) == 2
 
-    assert items[0]['movie']['title'] == 'Alouettes, le fil à la patte'
-    assert items[0]['movie']['url'] == 'http://cip-paris.fr/film/alouettes-le-fil-a-la-patte'
-    assert len(items[0]['cinemas']) == 1
-    assert items[0]['cinemas'][0]['name'] == 'Reflet Médicis'
-    assert items[0]['cinemas'][0]['url'] == 'http://cip-paris.fr/salle/reflet-medicis'
-    assert len(items[0]['cinemas'][0]['show_times']) == 1
-    assert items[0]['cinemas'][0]['show_times'][0] == '2022-03-11T19:30:00'
+    movie_1 = movies[0]
+    assert movie_1.title == 'Alouettes, le fil à la patte'
+    assert movie_1.url == 'http://cip-paris.fr/film/alouettes-le-fil-a-la-patte'
+
+    cinema_1 = movie_1.cinemas[0]
+    assert len(movie_1.cinemas) == 1
+    assert cinema_1.name == 'Reflet Médicis'
+    assert cinema_1.url == 'http://cip-paris.fr/salle/reflet-medicis'
+    assert len(cinema_1.show_times) == 1
+    assert cinema_1.show_times[0] == datetime.datetime(2022, 3, 11, 19, 30)
 
 
 @pytest.mark.parametrize("day, time ,expected",
@@ -51,3 +58,22 @@ def test_parse_show_time(day, time, expected):
     spider = MoviesSpider()
 
     assert spider.parse_show_time(day, time, 2000) == expected
+
+
+def test_render_html(tmpdir):
+    index_file = tmpdir + '/index.html'
+    render_html_file(index_file, FIXTURES_PATH + '/movies_1.json')
+
+    assert len(tmpdir.listdir()) == 1
+
+    with open(index_file, 'r') as f:
+        content = f.read()
+
+    soup = BeautifulSoup(content, 'html.parser')
+
+    assert 'generated: ' in content
+    assert 'Movie A' in content
+    assert len(soup.find_all(id="Cinema A")) == 1
+    assert len(soup.find_all(href="#Cinema A")) == 1
+    assert len(soup.find_all(id="Cinema B")) == 1
+    assert len(soup.find_all(href="#Cinema B")) == 1

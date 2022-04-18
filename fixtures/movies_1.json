@@ -1,0 +1,26 @@
+[
+  {
+    "movie": {
+      "title": "Movie A",
+      "url": "https://example.com/film/movie-a",
+      "cinemas": [
+        {
+          "name": "Cinema A",
+          "url": "https://example.com/salle/cinema-a",
+          "show_times": [
+            "2022-04-16T21:25:00",
+            "2022-04-20T21:10:00"
+          ]
+        },
+        {
+          "name": "Cinema B",
+          "url": "https://example.com/salle/cinema-b",
+          "show_times": [
+            "2022-04-16T21:25:00",
+            "2022-04-20T21:10:00"
+          ]
+        }
+      ]
+    }
+  }
+]
