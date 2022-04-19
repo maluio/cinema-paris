@@ -9,8 +9,9 @@
 </p>
 <h1>Cinemas</h1>
 <ul>
-    {% for cinema in cinemas %}
-        <li><a href="#{{ cinema.cinema.name }}">{{ cinema.cinema.name }}</a><a href="{{ cinema.cinema.url }}" target="_blank">-></a></li>
+    {% for cm in movies_by_cinema %}
+        <li><a href="#{{ cm.cinema.name }}">{{ cm.cinema.name }}</a><a href="{{ cm.cinema.url }}" target="_blank">-></a>
+        </li>
     {% endfor %}
 </ul>
 <h1>Movies</h1>
@@ -19,15 +20,28 @@
         <li><a href="#{{ movie.title }}">{{ movie.title }}</a><a href="{{ movie.url }}" target="_blank">-></a></li>
     {% endfor %}
 </ul>
+<h1>Movies by day</h1>
 <ul>
-    {% for cinema in cinemas %}
-        <li><a href="{{ cinema.cinema.url }}" target="_blank">{{ cinema.cinema.name }}</a></li>
-        <ul id="{{ cinema.cinema.name }}">
-            {% for movie in cinema.movies %}
+    {% for mbd in movies_by_day %}
+        <li>{{ mbd.day }}</li>
+        {% for movie in mbd.movies %}
+            <li><a href="#{{ movie.title }}">{{ movie.title }}</a><a href="{{ movie.url }}" target="_blank">-></a></li>
+        {% endfor %}
+    {% endfor %}
+</ul>
+<ul>
+    {% for cm in movies_by_cinema %}
+        <li><a href="{{ cm.cinema.url }}" target="_blank">{{ cm.cinema.name }}</a></li>
+        <ul id="{{ cm.cinema.name }}">
+            {% for movie in cm.movies %}
                 <li><a href="{{ movie.url }}" target="_blank">{{ movie.title }}</a></li>
                 <ul>
-                    {% for st in movie.show_times %}
-                        <li>{{ st }}</li>
+                    {% for mc in movie.cinemas %}
+                        {% if mc.url == cm.cinema.url %}
+                            {% for st in mc.show_times %}
+                                <li>{{ st|showtime }}</li>
+                            {% endfor %}
+                        {% endif %}
                     {% endfor %}
                 </ul>
             {% endfor %}
@@ -43,7 +57,7 @@
                 <li><a href="{{ cinema.url }}" target="_blank">{{ cinema.name }}</a></li>
                 <ul>
                     {% for st in cinema.show_times %}
-                        <li>{{ st }}</li>
+                        <li>{{ st|showtime }}</li>
                     {% endfor %}
                 </ul>
             {% endfor %}

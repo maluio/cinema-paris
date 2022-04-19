@@ -3,7 +3,8 @@ import datetime
 import pytest
 import os
 
-from main import MoviesSpider, render_html_file, Movie
+import main
+from main import MoviesSpider, render_html_file, Movie, Cinema
 from scrapy.http import TextResponse, Request
 
 from bs4 import BeautifulSoup
@@ -77,3 +78,40 @@ def test_render_html(tmpdir):
     assert len(soup.find_all(href="#Cinema A")) == 1
     assert len(soup.find_all(id="Cinema B")) == 1
     assert len(soup.find_all(href="#Cinema B")) == 1
+
+
+def test_remove_obsolete_show_times():
+    movies = [
+        Movie(
+            title='movie a',
+            url='url a',
+            cinemas=[
+                Cinema(
+                    name='cinema1',
+                    url='url b',
+                    show_times=[datetime.datetime(year=2000, month=1, day=14)]
+                )
+            ]
+        ),
+        Movie(
+            title='movie b',
+            url='url b',
+            cinemas=[
+                Cinema(
+                    name='cinema1',
+                    url='url b',
+                    show_times=[
+                        datetime.datetime(year=2000, month=1, day=14),
+                        datetime.datetime(year=2000, month=1, day=15)
+                    ]
+                )
+            ]
+        )
+    ]
+
+    post_movies = main.remove_obsolete_show_times(movies, datetime.date(year=2000, month=1, day=15))
+
+    assert len(post_movies) == 1
+    assert post_movies[0].title == 'movie b'
+    assert len(post_movies[0].cinemas[0].show_times) == 1
+    assert post_movies[0].cinemas[0].show_times[0] == datetime.datetime(year=2000, month=1, day=15)
