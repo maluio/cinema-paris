@@ -16,8 +16,9 @@ import boto3
 from botocore.exceptions import ClientError
 
 CIP_BASE_URL = 'http://cip-paris.fr'
+MAX_DAYS = os.getenv('MAX_DAYS', 10)
 
-# scrapy and boto3 are logging debug level; disable by default to not pollute the logs
+# scrapy and boto3 are logging by default debug level and above; disable by default to not pollute the logs
 if not os.getenv('DEBUG'):
     logging.disable(logging.DEBUG)
 
@@ -82,13 +83,6 @@ class MoviesSpider(scrapy.Spider):
         next_page = response.css('.pagination')[0].css('.current + .page a::attr("href")').get()
         if next_page is not None:
             yield response.follow(next_page, self.parse)
-
-
-def format_show_times(show_times):
-    sts = []
-    for st in show_times:
-        st.strftime('%a : %H:%Mh (%d/%Y)')
-    return sts
 
 
 def upload_file_to_s3(file_name, bucket, object_name=None):
@@ -170,17 +164,19 @@ def get_cinemas_by_day(movies: List[Movie], future_days_limit: int = 7):
     pass
 
 
-def remove_obsolete_show_times(movies: List[Movie], reference: datetime.date = datetime.date.today()) -> List[Movie]:
-    """Remove movies and show times in the past"""
+def remove_obsolete_show_times(movies: List[Movie], reference: datetime.date = datetime.date.today(),
+                               max_days: int = MAX_DAYS) -> List[Movie]:
+    """Remove movies with show times that are in the past or too far in the future"""
     for m in movies[:]:
-        has_future_show_time = False
+        has_desired_show_time = False
         for c in m.cinemas:
             for st in c.show_times[:]:
-                if st.date() >= reference:
-                    has_future_show_time = True
+                max_date = reference + datetime.timedelta(days=max_days)
+                if reference <= st.date() <= max_date:
+                    has_desired_show_time = True
                 else:
                     c.show_times.remove(st)
-        if not has_future_show_time:
+        if not has_desired_show_time:
             movies.remove(m)
     return movies
 

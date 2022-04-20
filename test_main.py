@@ -106,7 +106,18 @@ def test_remove_obsolete_show_times():
                     ]
                 )
             ]
-        )
+        ),
+        Movie(
+            title='movie c',
+            url='url c',
+            cinemas=[
+                Cinema(
+                    name='cinema1',
+                    url='url b',
+                    show_times=[datetime.datetime(year=2000, month=1, day=26)]
+                )
+            ]
+        ),
     ]
 
     post_movies = main.remove_obsolete_show_times(movies, datetime.date(year=2000, month=1, day=15))

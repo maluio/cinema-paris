@@ -1,68 +1,88 @@
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Malu CIP</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
 <p>
     generated: {{ now }}
 </p>
-<h1>Cinemas</h1>
-<ul>
-    {% for cm in movies_by_cinema %}
-        <li><a href="#{{ cm.cinema.name }}">{{ cm.cinema.name }}</a><a href="{{ cm.cinema.url }}" target="_blank">-></a>
-        </li>
-    {% endfor %}
-</ul>
-<h1>Movies</h1>
-<ul>
-    {% for movie in movies %}
-        <li><a href="#{{ movie.title }}">{{ movie.title }}</a><a href="{{ movie.url }}" target="_blank">-></a></li>
-    {% endfor %}
-</ul>
-<h1>Movies by day</h1>
-<ul>
-    {% for mbd in movies_by_day %}
-        <li>{{ mbd.day }}</li>
-        {% for movie in mbd.movies %}
-            <li><a href="#{{ movie.title }}">{{ movie.title }}</a><a href="{{ movie.url }}" target="_blank">-></a></li>
-        {% endfor %}
-    {% endfor %}
-</ul>
-<ul>
-    {% for cm in movies_by_cinema %}
-        <li><a href="{{ cm.cinema.url }}" target="_blank">{{ cm.cinema.name }}</a></li>
-        <ul id="{{ cm.cinema.name }}">
-            {% for movie in cm.movies %}
+<div class="container">
+
+    <div class="row">
+        <h1>Cinemas</h1>
+        <ul>
+            {% for cm in movies_by_cinema %}
+                <li><a href="#{{ cm.cinema.name }}">{{ cm.cinema.name }}</a><a href="{{ cm.cinema.url }}"
+                                                                               target="_blank">-></a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="row">
+        <h1>Movies</h1>
+        <ul>
+            {% for movie in movies %}
+                <li><a href="#{{ movie.title }}">{{ movie.title }}</a><a href="{{ movie.url }}"
+                                                                         target="_blank">-></a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="row">
+        <h1>Movies by day</h1>
+        <ul>
+            {% for mbd in movies_by_day %}
+                <li>{{ mbd.day }}</li>
+                {% for movie in mbd.movies %}
+                    <li><a href="#{{ movie.title }}">{{ movie.title }}</a><a href="{{ movie.url }}"
+                                                                             target="_blank">-></a>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+        <ul>
+            {% for cm in movies_by_cinema %}
+                <li><a href="{{ cm.cinema.url }}" target="_blank">{{ cm.cinema.name }}</a></li>
+                <ul id="{{ cm.cinema.name }}">
+                    {% for movie in cm.movies %}
+                        <li><a href="{{ movie.url }}" target="_blank">{{ movie.title }}</a></li>
+                        <ul>
+                            {% for mc in movie.cinemas %}
+                                {% if mc.url == cm.cinema.url %}
+                                    {% for st in mc.show_times %}
+                                        <li>{{ st|showtime }}</li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="row">
+        <h1>Movies</h1>
+        <ul>
+            {% for movie in movies %}
                 <li><a href="{{ movie.url }}" target="_blank">{{ movie.title }}</a></li>
-                <ul>
-                    {% for mc in movie.cinemas %}
-                        {% if mc.url == cm.cinema.url %}
-                            {% for st in mc.show_times %}
+                <ul id="{{ movie.title }}">
+                    {% for cinema in movie.cinemas %}
+                        <li><a href="{{ cinema.url }}" target="_blank">{{ cinema.name }}</a></li>
+                        <ul>
+                            {% for st in cinema.show_times %}
                                 <li>{{ st|showtime }}</li>
                             {% endfor %}
-                        {% endif %}
+                        </ul>
                     {% endfor %}
                 </ul>
             {% endfor %}
         </ul>
-    {% endfor %}
-</ul>
-<h1>Movies</h1>
-<ul>
-    {% for movie in movies %}
-        <li><a href="{{ movie.url }}" target="_blank">{{ movie.title }}</a></li>
-        <ul id="{{ movie.title }}">
-            {% for cinema in movie.cinemas %}
-                <li><a href="{{ cinema.url }}" target="_blank">{{ cinema.name }}</a></li>
-                <ul>
-                    {% for st in cinema.show_times %}
-                        <li>{{ st|showtime }}</li>
-                    {% endfor %}
-                </ul>
-            {% endfor %}
-        </ul>
-    {% endfor %}
-</ul>
+    </div>
+</div>
 </body>
 </html>
