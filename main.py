@@ -32,6 +32,7 @@ class Cinema(BaseModel):
 class Movie(BaseModel):
     url: str
     title: str
+    image_url: str
     cinemas: List[Cinema]
 
 
@@ -57,6 +58,7 @@ class MoviesSpider(scrapy.Spider):
         for container in response.css('.movie-results-container'):
             movie_title = container.css(".desc h3::text").get()
             sessions = container.css(".movie-sessions")
+            image_url = container.css(".poster img::attr(src)").get()
             cinemas = []
             for session in sessions:
                 cinema_names = session.css(".cinemaTitle")
@@ -77,6 +79,7 @@ class MoviesSpider(scrapy.Spider):
                     cinemas.append(cinema)
             yield {
                 'movie': Movie(title=movie_title, url=CIP_BASE_URL + container.css(".clearfix > a::attr(href)").get(),
+                               image_url=image_url,
                                cinemas=cinemas).dict()
             }
 
@@ -147,24 +150,7 @@ class MoviesByDay:
     movies: List[Movie] = field(default_factory=list)
 
 
-def get_movies_by_day(movies: List[Movie]) -> List[MoviesByDay]:
-    day_movies = dict()
-    for m in movies:
-        for c in m.cinemas:
-            for s in c.show_times:
-                day = s.date().isoformat()
-                if not day_movies.get(day):
-                    day_movies[day] = MoviesByDay(day=s.date())
-                if m not in day_movies[day].movies:
-                    day_movies[day].movies.append(m)
-    return day_movies.values()
-
-
-def get_cinemas_by_day(movies: List[Movie], future_days_limit: int = 7):
-    pass
-
-
-def remove_obsolete_show_times(movies: List[Movie], reference: datetime.date = datetime.date.today(),
+def remove_obsolete_show_times(movies: List[Movie], reference: datetime.date,
                                max_days: int = MAX_DAYS) -> List[Movie]:
     """Remove movies with show times that are in the past or too far in the future"""
     for m in movies[:]:
@@ -182,11 +168,21 @@ def remove_obsolete_show_times(movies: List[Movie], reference: datetime.date = d
 
 
 def show_time_render_filter(show_time: datetime.datetime):
-    delta = show_time - datetime.datetime.today()
-    return show_time.strftime(f'J-{delta.days} {show_time.strftime("%H:%M")}')
+    return show_time.strftime(f'{show_time.strftime("%H:%M")}')
 
 
-def render_html_file(html_file_name, data_file_name):
+def show_times_by_day_render_filter(show_times: List[datetime.datetime], days: List[datetime.date]):
+    by_day = []
+    for day in days:
+        sts = []
+        for st in show_times:
+            if day == st.date():
+                sts.append(st)
+        by_day.append(sts)
+    return by_day
+
+
+def render_html_file(html_file_name, data_file_name, reference: datetime.date = datetime.date.today()):
     with open(data_file_name, 'r') as f:
         movies_raw = json.load(f)
 
@@ -194,17 +190,23 @@ def render_html_file(html_file_name, data_file_name):
     for mr in movies_raw:
         movies.append(Movie.parse_obj(mr['movie']))
 
-    movies = remove_obsolete_show_times(movies)
+    movies = remove_obsolete_show_times(movies, reference)
 
     env = Environment(
         loader=FileSystemLoader("templates")
     )
     env.filters['showtime'] = show_time_render_filter
+    env.filters['showtimesdays'] = show_times_by_day_render_filter
+
+    days = []
+    for day in range(MAX_DAYS):
+        days.append(datetime.date.today() + datetime.timedelta(days=day))
 
     template = env.get_template("index.jinja2")
     with open(html_file_name, 'w') as t:
-        t.write(template.render(movies=movies, movies_by_day=get_movies_by_day(movies),
-                                movies_by_cinema=get_movies_by_cinema(movies), now=datetime.datetime.now()))
+        t.write(template.render(movies=movies,
+                                movies_by_cinema=get_movies_by_cinema(movies), now=datetime.datetime.now(),
+                                image_prefix=CIP_BASE_URL, days=days))
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@
     "movie": {
       "title": "Movie A",
       "url": "https://example.com/film/movie-a",
+      "image_url": "/image1.jpeg",
       "cinemas": [
         {
           "name": "Cinema A",

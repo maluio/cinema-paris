@@ -41,6 +41,7 @@ def test_movies(load_movies_1_html):
     movie_1 = movies[0]
     assert movie_1.title == 'Alouettes, le fil à la patte'
     assert movie_1.url == 'http://cip-paris.fr/film/alouettes-le-fil-a-la-patte'
+    assert movie_1.image_url == '/uploads/media/default/0002/71/thumb_170643_default_md.jpeg'
 
     cinema_1 = movie_1.cinemas[0]
     assert len(movie_1.cinemas) == 1
@@ -63,7 +64,7 @@ def test_parse_show_time(day, time, expected):
 
 def test_render_html(tmpdir):
     index_file = tmpdir + '/index.html'
-    render_html_file(index_file, FIXTURES_PATH + '/movies_1.json')
+    render_html_file(index_file, FIXTURES_PATH + '/movies_1.json', datetime.date(2022, 4, 15))
 
     assert len(tmpdir.listdir()) == 1
 
@@ -85,6 +86,7 @@ def test_remove_obsolete_show_times():
         Movie(
             title='movie a',
             url='url a',
+            image_url='/image1.jpeg',
             cinemas=[
                 Cinema(
                     name='cinema1',
@@ -96,6 +98,7 @@ def test_remove_obsolete_show_times():
         Movie(
             title='movie b',
             url='url b',
+            image_url='/image1.jpeg',
             cinemas=[
                 Cinema(
                     name='cinema1',
@@ -110,6 +113,7 @@ def test_remove_obsolete_show_times():
         Movie(
             title='movie c',
             url='url c',
+            image_url='/image1.jpeg',
             cinemas=[
                 Cinema(
                     name='cinema1',
