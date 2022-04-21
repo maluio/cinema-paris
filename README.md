@@ -1,12 +1,14 @@
 [![Tests](https://github.com/maluio/cinema-paris/actions/workflows/tests.yml/badge.svg)](https://github.com/maluio/cinema-paris/actions/workflows/tests.yml)
 
-# Paris Cinema Scraper
+# Paris Independent Cinema Scraper
 
 ## Why
 
-Independent movie theatres in Paris are great. I don't know the details of how they organize themselves in detail, but I am aware of the association **Cinémas Indépendants Parisiens** and their [website](http://cip-paris.fr/) which I use to find which movies are playing in my area.
+Independent movie theatres in Paris are great. I don't know the details of how they organize themselves in detail, but I am aware of the association **Cinémas Indépendants Parisiens** and their [website](http://cip-paris.fr/), which I use to find which movies are playing in my area.
 
-Unfortunately, I find the website difficult to navigate and its design not helpful in terms of UX. Most of the time I just want to know which movies are playing in my preferred theatre in the next days. Hence, I created this little project to scrape the movie data and render it into a single html file which presents the show times in a way that are the most helpful to me.
+Unfortunately, I find the website difficult to navigate and its design not helpful in terms of UX. Most of the time I just want to know which movies are playing in my preferred theatre in the next days. Hence, I created this little project to scrape the movie data and render it into a single html to present the show times in a way that are the most useful to me.
+
+**Please note: I have no affiliation Cinémas Indépendants Parisiens. This is just a little personal project.**
 
 ## What the result looks like
 
