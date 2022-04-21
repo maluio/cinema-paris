@@ -1,6 +1,9 @@
 name: Main
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  # run every day at 2am
 
 permissions:
   contents: read
